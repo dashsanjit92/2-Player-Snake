@@ -1,0 +1,909 @@
+#include <glut.h>
+//#include<opengl.h>
+#include<stdio.h>
+#include<string.h>
+//#include <text3d.h>
+float i=1.0,j=0.0,k=0.0,p=5.0;
+float q=0.0,r=100.0,food1=250,food2=300;
+int z,e1=20,f11=0,z1,e2=180,f2=0,a1,a2,comp,comp1,max=0,max1=0,view=0,y_dif=0,error=0,speed,portal_count=2;
+//const char* strs[2]={"PLAYER 1 WINS","PLAYER 2 WINS"};
+//..............................................snake1.................................................
+int l=0,u=0,d=0,ri=0,rie=0,length=3,ii=0,ki2[1000],g,g1,text,text1;
+float s1q[1000],s1r[1000],qtemp[1000],rtemp[1000];
+float max_x=300.0,max_y=500.0;
+
+
+//................................................snake 2................................................
+ float ux=200.0,v=100.0;
+ float s2u[1000],s2v[1000];
+int l2=0,u2=0,d2=0,ri2=0,le2=0;
+int ii2=0,ki22[1000],length2=3,f,f1;
+float utemp[1000],vtemp[1000];
+/*void result()
+{
+     glPushMatrix();
+     if(length==25+max)
+     t3dDraw3D(strs[0],0,0,0.2f);
+     else
+     t3dDraw3D(strs[1],0,0,0.2f);
+     glPopMatrix();
+}*/
+
+
+void resize(int w,int h)
+{
+      glClearColor(0.0,0.0,0.0,0.0);
+    //glColor3f(i,i,i);
+     glPointSize(p);
+     glViewport(0,0,(GLsizei)w,(GLsizei)h);
+    glMatrixMode(GL_PROJECTION);
+     //glMatrixMode(GL_MODELVIEW);
+     glLoadIdentity();
+      gluOrtho2D(0.0,(GLsizei)w,0.0,(GLsizei)h);
+   //    gluPerspective(40.0,(GLdouble)w/(GLdouble)h,0.5,20.0);
+   //glOrtho (-3.5, 3.5, -3.5*(GLfloat)h/(GLfloat)w, 
+//3.5*(GLfloat)h/(GLfloat)w, -3.5, 3.5);
+      max_x=w;
+      max_y=h;
+   //    star_countx1=max_x/2;
+     // star_county1=max_y/2;
+       if(max_x>300)
+      {
+      ux=max_x;
+      r=v=max_y/2;
+      e1=100;
+      f11=150;
+      f2=150;max=4;max1=4;
+      error=130;
+     
+      //f2=max_y-50;
+      e2=max_x-300;
+      a1=100,a2=3;
+      if(length==25 || length2==25)
+      {
+         length=length2=3;           
+      }
+      } 
+      else
+      {
+          ux=200.0,v=100.0,r=100.0,q=0;
+          a1=0,a2=0;max=0;max1=0;
+          e1=20,e2=180,f11=0,f2=0;
+          error=0;
+           if(length==29 || length2==29)
+      {
+         length=length2=3;           
+      }
+      }
+     // if(view==0)
+    // gluPerspective(60,(GLfloat)w/(GLfloat)h,1.0,100.0);
+     glMatrixMode(GL_MODELVIEW);
+}
+
+/*void stars()
+{
+    
+                 //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      //glLoadIdentity();
+  //     glClearColor(0.0,0.0,0.0,0.0);
+     glBegin(GL_POINTS);
+     glColor3f(1,1,1);
+   for(star_countx=0; star_countx<=max_x;star_countx+=6)
+   {
+       for(star_county=0; star_county<=max_y;star_county+=6)                 
+       {
+                  glVertex2i(star_countx,star_county);
+       }
+   }
+   glEnd();
+}*/
+
+          void sphere()
+          {// glMatrixMode(GL_MODELVIEW);
+         // glClearColor(0.0,0.0,0.0,0.0);
+    // clear the drawing buffer.
+    glClear(GL_COLOR_BUFFER_BIT);
+    // clear the identity matrix.
+   // glLoadIdentity();
+   // glFlush();
+    }
+void myDisplay(void)
+{
+    if(view==0)
+    {
+    	
+           glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// Clean the screen and the depth buffer
+	glLoadIdentity();	
+	    
+    	     glColor3f(i,i,i);
+   char *a100="BATTLE SNAKES ";
+glRasterPos3f( max_x/2-80 , max_y/2 ,0.0f );
+for(text1 = 0; a100[text1] != '\0'; text1++)
+    glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18 , a100[text1]);  
+    
+       	     glColor3f(1, 1, 0);
+   char *a110="Press ESC to continue..... ";
+glRasterPos3f( 10 , 20 ,0.0f );
+for(text1 = 0; a110[text1] != '\0'; text1++)
+    glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18 , a110[text1]); 
+             
+    }
+    
+  else if(view==1)
+     {
+                  speed=15;
+              glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// Clean the screen and the depth buffer
+	glLoadIdentity();	
+	     glColor3f(1.0f, 1.0f, 0.0f);
+   char *a10="BATTLE SNAKES ";
+glRasterPos3f( max_x/2-60 , max_y-20 ,0.0f );
+for(text1 = 0; a10[text1] != '\0'; text1++)
+    glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18 , a10[text1]);
+    
+    	     glColor3f(0.4f, 0.1f, 1.0f);
+   char *a20="(Created by Sanjit) ";
+glRasterPos3f( max_x/2-60 , max_y-40 ,0.0f );
+for(text1 = 0; a20[text1] != '\0'; text1++)
+    glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18 , a20[text1]);
+    
+    
+         glColor3f(1.0f, 0.0f, 0.0f);
+   char *a11="RULES:";
+glRasterPos3f( 0 , max_y-80 ,0.0f );
+for(text1 = 0; a11[text1] != '\0'; text1++)
+    glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18 , a11[text1]);
+    
+            glColor3f(1.0f, 1.0f, 1.0f);
+   char *a12="There will be two snakes battling it out.Initially both the snakes are of length 3.The objective of the game is to reach to the maximum length by   eating the blinking dots(food).The    player who reaches maximum length   first will be the winner.If the snake hits itself then its length will be reduced to 3 ";
+glRasterPos3f( 0 , max_y-100 ,0.0f );
+for(text1 = 0; a12[text1] != '\0'; text1++)
+{
+    //y_dif=y_dif+1;      
+    if(text1%(37+error)==0) //&& max_x<=300)
+    {
+               //  y_dif=y_dif+20; 
+       glRasterPos3f( 0 , max_y-100-25*(text1/(37+error)) ,0.0f );
+       }
+    glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18 , a12[text1]);
+ 
+}
+          glColor3f(1.0f, 0.0f, 0.0f);
+   char *a13="CONTROLS:";
+glRasterPos3f( 0 , max_y-330 ,0.0f );
+for(text1 = 0; a13[text1] != '\0'; text1++)
+    glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18 , a13[text1]);
+    
+    
+     glColor3f(1.0f, 1.0f, 1.0f);
+   char *a14="PLAYER 1: W(up)   A(left)   S(down)                     D(right)          PLAYER 2: I(up)   J(left)   K(down)                     L(right)                             P(Pause)                             ESC(start)";
+glRasterPos3f( 0 , max_y-350 ,0.0f );
+for(text1 = 0; a14[text1] != '\0'; text1++)
+{
+    //y_dif=y_dif+1;      
+    if(text1%37==0 )//&& max_x<=300)
+    {
+               //  y_dif=y_dif+20; 
+       glRasterPos3f( 0 , max_y-350-25*(text1/37) ,0.0f );
+       }
+    glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18 , a14[text1]);
+ 
+}
+    
+    
+    
+    }
+    else
+    {
+     glClear(GL_COLOR_BUFFER_BIT);
+   //  glLoadIdentity();
+     glBegin(GL_POINTS);
+     // glColor3f(i,j,k);
+     
+//.................................................snake1....................................................
+     glColor3f(1,0,0);
+     glVertex2i(q,r);
+     
+//....for head.......
+     if( ri==1)
+     {
+      glVertex2i(q-1,r+1);
+       glVertex2i(q-1,r-1);
+      }
+      else if(l==1)
+      {
+           glVertex2i(q+1,r+1);
+       glVertex2i(q+1,r-1);
+       }
+      else if(u==1)
+      {
+           glVertex2i(q+1,r-1);
+           glVertex2i(q-1,r-1);
+      }
+      else if(d==1)
+      {
+          
+           glVertex2i(q+1,r+1);
+           glVertex2i(q-1,r+1);
+      }
+      else
+       {
+      glVertex2i(q-1,r+1);
+       glVertex2i(q-1,r-1);
+      }
+     // glColor3f(i-1.0,j+1.0,k);
+     glColor3f(0,0.8,0);
+   //  glVertex2i(q1,r1);                 
+    // glVertex2i(q2,r2);
+    
+    glVertex2i(s1q[0],s1r[0]);  
+     glColor3f(1,1,0);               
+    glVertex2i(s1q[1],s1r[1]);
+    
+     for(g=2;g<=23+max;g++)
+     {
+        // printf("%d",length);
+         if(length>=(g+2))
+         {
+           if(g%2==0)
+           glColor3f(0,0.8,0);
+           else
+           glColor3f(1,1,0);
+          glVertex2i(s1q[g],s1r[g]);
+         }
+     }
+ 
+
+    
+  
+   
+    
+
+      
+      //..........................snake 2...............................
+       glColor3f(1,0,0);
+     glVertex2i(ux,v);
+     //.....for head........
+      if( ri2==1)
+     {
+      glVertex2i(ux-1,v+1);
+       glVertex2i(ux-1,v-1);
+      }
+      else if(l2==1)
+      {
+           glVertex2i(ux+1,v+1);
+       glVertex2i(ux+1,v-1);
+       }
+      else if(u2==1)
+      {
+           glVertex2i(ux+1,v-1);
+           glVertex2i(ux-1,v-1);
+      }
+      else if(d2==1)
+      {
+          
+           glVertex2i(ux+1,v+1);
+           glVertex2i(ux-1,v+1);
+      }
+      else
+       {
+      glVertex2i(ux+1,v+1);
+       glVertex2i(ux+1,v-1);
+      }
+     
+     glColor3f(1,1,0);
+     glVertex2i( s2u[0],s2v[0]);
+     glColor3f(1,0,0);
+     glVertex2i( s2u[1],s2v[1]);
+     for(f=2;f<=23+max1;f++)
+     {
+        // printf("%d",length2);
+         if(length2>=(f+2))
+         {
+           if(f%2==0)
+           glColor3f(1,1,0);
+           else
+           glColor3f(1,0,0);
+          glVertex2i(s2u[f],s2v[f]);
+         }
+     }
+      glColor3f(i,i,i);
+     // glPointSize(6.0);
+      glVertex2i(food1,food2);
+      
+      
+      //......score board(points)1...................
+       glColor3f(1,0.5,0);
+       glVertex2i(15+e1,430+f11);
+        glVertex2i(15+e1,425+f11);
+         glVertex2i(15+e1,435+f11);
+          glVertex2i(15+e1,440+f11);
+       glVertex2i(18+a2+e1,430+f11);
+        //glVertex2i(15,430);
+        glVertex2i(18+a2+e1,425+f11);
+         glVertex2i(18+a2+e1,435+f11);
+          glVertex2i(18+a2+e1,440+f11);
+       glVertex2i(21+2*a2+e1,430+f11);
+       // glVertex2i(15,430);
+        glVertex2i(21+2*a2+e1,425+f11);
+         glVertex2i(21+2*a2+e1,435+f11);
+          glVertex2i(21+2*a2+e1,440+f11);
+      for(z=24+2*a2;z<=86+a1;z+=(3+a2))
+      {    
+          if(a2==0)
+          comp=(z/3)-4;
+          else
+          comp=(z/6)-1;           
+          if(length>=comp)
+          {
+          
+             glColor3f(0,1,0);
+             if(z>=60+3*(a1/4)-5*a2)
+             glColor3f(1,0,0); 
+             glVertex2i(z+a2+e1,430+f11);
+             glVertex2i(z+a2+e1,425+f11);
+             glVertex2i(z+a2+e1,435+f11);
+             glVertex2i(z+a2+e1,440+f11);
+          }
+      }
+      
+      //......................scoreboard2(points).............................
+      
+       glColor3f(1,0.5,0);
+       glVertex2i(15+e2,430+f2);
+        glVertex2i(15+e2,425+f2);
+         glVertex2i(15+e2,435+f2);
+          glVertex2i(15+e2,440+f2);
+       glVertex2i(18+a2+e2,430+f2);
+        //glVertex2i(15,430);
+        glVertex2i(18+a2+e2,425+f2);
+         glVertex2i(18+a2+e2,435+f2);
+          glVertex2i(18+a2+e2,440+f2);
+       glVertex2i(21+2*a2+e2,430+f2);
+       // glVertex2i(15,430);
+        glVertex2i(21+2*a2+e2,425+f2);
+         glVertex2i(21+2*a2+e2,435+f2);
+          glVertex2i(21+2*a2+e2,440+f2);
+      for(z1=24+2*a2;z1<=86+a1;z1+=(3+a2))
+      {    
+          if(a2==0)
+          comp1=(z1/3)-4;
+          else
+          comp1=(z1/6)-1;              
+          if(length2>=comp1)
+          {
+          
+             glColor3f(0,1,0);
+             if(z1>=60+3*(a1/4)-5*a2)
+             glColor3f(1,0,0); 
+             glVertex2i(z1+a2+e2,430+f2);
+             glVertex2i(z1+a2+e2,425+f2);
+             glVertex2i(z1+a2+e2,435+f2);
+             glVertex2i(z1+a2+e2,440+f2);
+          }
+      }
+     glEnd();
+     	//Clear information from last draw
+	/*glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
+	glMatrixMode(GL_MODELVIEW); //Switch to the drawing perspective
+	glLoadIdentity();*/ 
+     
+        glBegin(GL_QUADS);
+        //.......................1st point table.............................
+        //....................upper rect....................
+         glColor3f(0.5,0.5,0.5);
+        glVertex3f(10+e1,440+f11,0);
+        glColor3f(1,1,1);
+        glVertex3f(10+e1,445+f11,0);
+           glColor3f(0.5,0.5,0.5);
+        glVertex3f(91+e1+a1,445+f11,0);
+        // glColor3f(1,1,1);
+        glVertex3f(91+e1+a1,440+f11,0);
+        
+        //....................lower rect.........................
+         glColor3f(0.5,0.5,0.5);
+        glVertex3f(10+e1,420+f11,0);
+        glVertex3f(10+e1,425+f11,0);
+       // glColor3f(0,0,1);
+        glVertex3f(91+e1+a1,425+f11,0);
+       //  glColor3f(0,0,1);
+       glColor3f(1,1,1);
+        glVertex3f(91+e1+a1,420+f11,0);
+       // glColor3f(0,0,1);
+         
+         //..................left rect...........................
+         glColor3f(0.5,0.5,0.5);
+        glVertex3f(10+e1,425+f11,0);
+        glVertex3f(10+e1,440+f11,0);
+        glVertex3f(15+e1,440+f11,0);
+         //glColor3f(0,0,1);
+        glVertex3f(15+e1,425+f11,0);
+        
+         //.......................rigth rect.................................
+         glColor3f(0.5,0.5,0.5);
+        glVertex3f(86+e1+a1,425+f11,0);
+        //glColor3f(0,0,1);
+        glVertex3f(86+e1+a1,440+f11,0);
+        //glColor3f(0,0,1);
+        glVertex3f(91+e1+a1,440+f11,0);
+        // glColor3f(0,0,1);
+        glVertex3f(91+e1+a1,425+f11,0);
+        
+        //.......................left triangle............................
+       //glColor3f(0.5,0.5,0.5);
+        glColor3f(1,1,1);
+        glVertex3f(9+e1,445+f11,0);
+        glColor3f(0.5,0.5,0.5);
+       //lColor3f(1,1,1);
+         glVertex3f(10+e1,445+f11,0);
+       glColor3f(0.5,0.5,0.5);
+        glVertex3f(10+e1,420+f11,0);
+        glColor3f(1,1,1);
+        glVertex3f(0+e1,420+f11,0);
+      //  glColor3f(0,0,1);
+      
+      //.........................right triangle............................
+         glColor3f(0.5,0.5,0.5);
+         glVertex3f(91+e1+a1,445+f11,0);
+         glColor3f(1,1,1);
+        glVertex3f(101+e1+a1,445+f11,0);
+        glVertex3f(92+e1+a1,420+f11,0);
+        glVertex3f(91+e1+a1,420+f11,0);
+        
+          //.......................2st point table.............................
+        //....................upper rect....................
+         glColor3f(0.5,0.5,0.5);
+        glVertex3f(10+e2,440+f2,0);
+        glColor3f(1,1,1);
+        glVertex3f(10+e2,445+f2,0);
+           glColor3f(0.5,0.5,0.5);
+        glVertex3f(91+e2+a1,445+f2,0);
+        // glColor3f(1,1,1);
+        glVertex3f(91+e2+a1,440+f2,0);
+        
+        //....................lower rect.........................
+         glColor3f(0.5,0.5,0.5);
+        glVertex3f(10+e2,420+f2,0);
+        glVertex3f(10+e2,425+f2,0);
+       // glColor3f(0,0,1);
+        glVertex3f(91+e2+a1,425+f2,0);
+       //  glColor3f(0,0,1);
+       glColor3f(1,1,1);
+        glVertex3f(91+e2+a1,420+f2,0);
+       // glColor3f(0,0,1);
+         
+         //..................left rect...........................
+         glColor3f(0.5,0.5,0.5);
+        glVertex3f(10+e2,425+f2,0);
+        glVertex3f(10+e2,440+f2,0);
+        glVertex3f(15+e2,440+f2,0);
+         //glColor3f(0,0,1);
+        glVertex3f(15+e2,425+f2,0);
+        
+         //.......................rigth rect.................................
+         glColor3f(0.5,0.5,0.5);
+        glVertex3f(86+e2+a1,425+f2,0);
+        //glColor3f(0,0,1);
+        glVertex3f(86+e2+a1,440+f2,0);
+        //glColor3f(0,0,1);
+        glVertex3f(91+e2+a1,440+f2,0);
+        // glColor3f(0,0,1);
+        glVertex3f(91+e2+a1,425+f2,0);
+        
+        //.......................left triangle............................
+       //glColor3f(0.5,0.5,0.5);
+        glColor3f(1,1,1);
+        glVertex3f(9+e2,445+f2,0);
+        glColor3f(0.5,0.5,0.5);
+       //lColor3f(1,1,1);
+         glVertex3f(10+e2,445+f2,0);
+       glColor3f(0.5,0.5,0.5);
+        glVertex3f(10+e2,420+f2,0);
+        glColor3f(1,1,1);
+        glVertex3f(0+e2,420+f2,0);
+      //  glColor3f(0,0,1);
+      
+      //.........................right triangle............................
+         glColor3f(0.5,0.5,0.5);
+         glVertex3f(91+e2+a1,445+f2,0);
+         glColor3f(1,1,1);
+        glVertex3f(101+e2+a1,445+f2,0);
+        glVertex3f(92+e2+a1,420+f2,0);
+        glVertex3f(91+e2+a1,420+f2,0);
+         
+ //..........................teleportation portal..................................
+           
+           glColor3f(0,1,0);
+         glVertex3f(91+e2+a1,145+f2,0);
+          glColor3f(1,1,0);
+        glVertex3f(111+e2+a1,145+f2,0);
+         glColor3f(0,1,0);
+        glVertex3f(111+e2+a1,165+f2,0);
+        glColor3f(1,1,0);
+        glVertex3f(91+e2+a1,165+f2,0); 
+           glColor3f(0,0,0);
+         glVertex3f(96+e2+a1,150+f2,0);
+        glVertex3f(106+e2+a1,150+f2,0);
+        glVertex3f(106+e2+a1,160+f2,0);
+        glVertex3f(96+e2+a1,160+f2,0); 
+        
+        
+        
+           glColor3f(1,0,0);
+         glVertex3f(141,145,0);
+          glColor3f(1,1,0);
+        glVertex3f(161,145,0);
+        glColor3f(1,0,0);
+        glVertex3f(161,165,0);
+          glColor3f(1,1,0);
+        glVertex3f(141,165,0); 
+           glColor3f(0,0,0);
+         glVertex3f(146,150,0);
+        glVertex3f(156,150,0);
+        glVertex3f(156,160,0);
+        glVertex3f(146,160,0); 
+ 
+       glEnd();  
+         
+  /*       glPushMatrix();
+     if(length==25+max)
+     t3dDraw3D(strs[0],0,0,0.2f);
+     else
+     t3dDraw3D(strs[1],0,0,0.2f);
+     glPopMatrix();*/
+        
+   //  glutSwapBuffers();
+   glColor3f(0.0f, 1.0f, 0.0f);
+   char *a="PLAYER 1";
+glRasterPos3f( 27.0f+a1 , 460.0f+f11 ,0.0f );
+for(text = 0; a[text] != '\0'; text++)
+    glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18 , a[text]);
+    
+     //  glutSwapBuffers();
+     glColor3f(1.0f, 0.0f, 0.0f);
+   char *b="PLAYER 2";
+glRasterPos3f( 191.0f+9*a1 , 460.0f+f11 ,0.0f );
+for(text1 = 0; a[text1] != '\0'; text1++)
+    glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18 , b[text1]);
+   
+    if(length==25+max)
+     {
+       //printf("PLAYER 1 WINS\n");
+       //getch();
+      
+       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// Clean the screen and the depth buffer
+	glLoadIdentity();
+      glColor3f(0.0f, 1.0f, 0.0f);
+   char *a="PLAYER 1 WINS";
+glRasterPos3f( max_x/2-60 , max_y/2 ,0.0f );
+for(text = 0; a[text] != '\0'; text++)
+    glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18 , a[text]);
+    //length=3;length2=3;
+    				
+      // exit(0);
+     }
+     else if(length2==25+max1)
+     {
+        //   printf("PLAYER 2 WINS\n");
+        //getch();
+          // exit(0);
+      //     length=3;length2=3;
+      
+             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// Clean the screen and the depth buffer
+	glLoadIdentity();	
+	     glColor3f(1.0f, 0.0f, 0.0f);
+   char *a="PLAYER 2 WINS";
+glRasterPos3f( max_x/2-60 , max_y/2 ,0.0f );
+for(text1 = 0; a[text1] != '\0'; text1++)
+    glutBitmapCharacter( GLUT_BITMAP_HELVETICA_18 , a[text1]);
+    }
+}//view else end
+     glFlush();
+}
+/*void idleFunc(void)
+{
+      star_countx1+=6;
+     
+    myDisplay();
+}*/
+void handleKeypress(unsigned char key, //The key that was pressed
+					int x, int y) {    //The current mouse coordinates
+	switch (key) {
+		case 97: 
+            if(ri==1 || l==1 || rie==1) 
+            break; 
+			l=1;u=d=ri=rie=0;
+            break;
+            
+        case 100:
+             if(l==1 || ri==1 || rie==1) 
+             break;
+             ri=1;u=d=l=rie=0;
+             break;
+             
+        case 115:
+             if(u==1 || d==1) 
+             break;
+             d=1;u=ri=l=rie=0;
+             break;
+             
+        case 119:
+             if(d==1 || u==1) 
+             break;
+             u=1;d=l=ri=rie=0; 
+             break; 
+             
+        	case  106: 
+            if(ri2==1 || l2==1 || le2==1) 
+            break; 
+			l2=1;u2=d2=ri2=le2=0;
+            break;
+            
+            case 108:
+             if(l2==1 || ri2==1 || le2==1)
+             break;
+             ri2=1;u2=d2=l2=le2=0;
+             break;
+
+        case 107:
+             if(u2==1 || d2==1 )
+             break;
+             d2=1;u2=ri2=l2=le2=0;
+             break;
+             
+        case 105:
+             if(d2==1 || u2==1 )
+             break;
+             u2=1;d2=l2=ri2=le2=0; 
+             break; 
+             
+      case 112:
+           system("pause"); 
+      case 27:
+           view=view+1;       
+            length=length2=3;    
+	}
+}
+
+void update(int value)
+{  
+      if((food1-2)<=q && q<=(food1+2) && (food2-2)<=r && r<=(food2+2))
+     {
+          food1=food1+10;
+          food2=food2+50;
+          if(food1>=max_x)
+          food1=30;
+          if(food2>=max_y)
+          food2=60;
+          printf("\a");
+          length++;
+     }
+       if((food1-2)<=ux && ux<=(food1+2) && (food2-2)<=v && v<=(food2+2))
+     {
+          food1=food1+10;
+          food2=food2+50;
+          if(food1>=max_x)
+          food1=30;
+          if(food2>=max_y)
+          food2=60;
+          printf("\a");
+          length2++;
+     }
+//...............................teleport..............................
+     if((q>=96+e2+a1 && q<=106+e2+a1)  && (r>=150+f2 && r<=160+f2))//&&portal_count!=0)
+     {
+               q=151;
+               r=155;
+               portal_count=1;
+     }
+     if((ux>=146 && ux<=156)  && (v>=150 && v<=160))//&&portal_count!=1)
+     {
+               ux=101+e2+a1;
+               v=155+f2;
+               portal_count=0;
+     }
+//........................................snake1.......................................................
+     qtemp[ii]=q;rtemp[ii]=r;
+     ii++;
+      if(ii==1000)
+     ii=0;
+
+    // if(length>=4)
+    // {
+     //printf("%d ",ii);
+     if(ii<6)
+     ki2[0]=994+ii;
+     else
+     ki2[0]=ii-6;
+         s1q[0]=qtemp[ki2[0]];
+         s1r[0]=rtemp[ki2[0]];
+     if(ki2[0]<6)
+     ki2[1]=994+ki2[0];
+     else
+     ki2[1]=ki2[0]-6;
+         s1q[1]=qtemp[ki2[1]];
+         s1r[1]=rtemp[ki2[1]];
+      
+     for(g1=2;g1<=25+max;g1++)
+     {
+         if(length>=g1+2)
+         {
+              // printf("%d  ",ii2);
+               if(ki2[g1-1]<6)
+               ki2[g1]=994+ki2[g1-1];
+               else
+               ki2[g1]=ki2[g1-1]-6;
+               s1q[g1]=qtemp[ki2[g1]];
+               s1r[g1]=rtemp[ki2[g1]];
+         }
+     }   
+     
+     if(u==1)
+     {
+       r=r+1;
+       if(r>=max_y)
+       r=0;
+     }
+     else if(d==1)
+     {
+       r=r-1;
+       if(r<=0)
+       r=max_y;
+     }
+     else if(l==1)
+     {
+       q=q-1;
+       if(q<=0)
+       q=max_x;
+     }
+     else if(ri==1)
+     {
+       q=q+1;
+       if(q>=max_x)
+       q=0;
+     }
+     else
+     {
+       q=q+1;
+       rie=1;
+        if(q>=max_x)
+       q=0;
+     }
+     
+     for(g=2;g<=23+max;g++)
+     {
+        if(s1q[g]-1<=q && q<=s1q[g]+1 && s1r[g]-1<=r && r<=s1r[g]+1)
+        length=3;
+     }
+     
+    /* if((q4-1<=q && q<=q4+1 && r4-1<=r && r<=r4+1)||(q5-1<=q && q<=q5+1 && r5-1<=r && r<=r5+1)||(q6-1<=q && q<=q6+1 && r6-1<=r && r<=r6+1)||(q7-1<=q && q<=q7+1 && r7-1<=r && r<=r7+1)||(q8-1<=q && q<=q8+1 && r8-1<=r && r<=r8+1)||(q9-1<=q && q<=q9+1 && r9-1<=r && r<=r9+1)||(q10-1<=q && q<=q10+1 && r10-1<=r && r<=r10+1)||(q11-1<=q && q<=q11+1 && r11-1<=r && r<=r11+1)||(q12-1<=q && q<=q12+1 && r12-1<=r && r<=r12+1)||(q13-1<=q && q<=q13+1 && r13-1<=r && r<=r13+1)||(q14-1<=q && q<=q14+1 && r14-1<=r && r<=r14+1)||(q15-1<=q && q<=q15+1 && r15-1<=r && r<=r15+1)||(q16-1<=q && q<=q16+1 && r16-1<=r && r<=r16+1)||(q17-1<=q && q<=q17+1 && r17-1<=r && r<=r17+1))
+     length=3;*/
+  //.........................................................snake2.............................................................. 
+     
+         utemp[ii2]=ux;vtemp[ii2]=v;
+     ii2++;
+      if(ii2==1000)
+     ii2=0;
+
+     if(ii2<6)
+     ki22[0]=994+ii2;
+     else
+     ki22[0]=ii2-6;
+         s2u[0]=utemp[ki22[0]];
+         s2v[0]=vtemp[ki22[0]];
+     if(ki22[0]<6)
+     ki22[1]=994+ki22[0];
+     else
+     ki22[1]=ki22[0]-6;
+         s2u[1]=utemp[ki22[1]];
+         s2v[1]=vtemp[ki22[1]];
+      
+     for(f1=2;f1<=25+max1;f1++)
+     {
+         if(length2>=f1+2)
+         {
+              // printf("%d  ",ii2);
+               if(ki22[f1-1]<6)
+               ki22[f1]=994+ki22[f1-1];
+               else
+               ki22[f1]=ki22[f1-1]-6;
+               s2u[f1]=utemp[ki22[f1]];
+               s2v[f1]=vtemp[ki22[f1]];
+         }
+     }   
+     
+     if(u2==1)
+     {
+       v=v+1;
+       if(v>=max_y)
+       v=0;
+     }
+     else if(d2==1)
+     {
+       v=v-1;
+       if(v<=0)
+       v=max_y;
+     }
+     else if(l2==1)
+     {
+       ux=ux-1;
+       if(ux<=0)
+       ux=max_x;
+     }
+     else if(ri2==1)
+     {
+       ux=ux+1;
+       if(ux>=max_x)
+       ux=0;
+     }
+     else
+     {
+       ux=ux-1;
+       le2=1;
+        if(ux<=0)
+       ux=max_x;
+     }
+     
+       for(f=2;f<=23+max1;f++)
+     {
+        if(s2u[f]-1<=ux && ux<=s2u[f]+1 && s2v[f]-1<=v && v<=s2v[f]+1)
+        length2=3;
+     }
+     
+  
+      i=i+0.5;
+     if(i==1.5){
+     i=0.0;
+     }  
+     
+     
+     
+       
+     glutPostRedisplay();
+     glutTimerFunc(speed,update,0);
+}
+
+void main(int argc,char **argv)
+{
+     glutInit(&argc,argv);
+     glutInitDisplayMode(GLUT_SINGLE|GLUT_RGB);
+    // glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+   /*  glutGameModeString("1024*768:32@75");
+     glutEnterGameMode();
+     system("pause");*/
+     glutInitWindowSize(300,500);               //300,500
+     glutInitWindowPosition(400,150);              //400,150
+     glutCreateWindow("SNAKES");
+   //  glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+    // PlaySound("Emma.mp3",NULL,SND_ASYNC|SND_FILENAME|SND_LOOP);
+    //  glutGameModeString("1024*768:32@75");
+
+  //   myInit();
+  // glutReshapeFunc(resize);
+  // if(length <25+max && length2<25+max1)
+  // {
+      
+      
+     glutDisplayFunc(myDisplay);
+     glutKeyboardFunc(handleKeypress);
+    // glTranslatef(q,r,s);
+   // if(view>1)
+ //  glutIdleFunc(idleFunc);
+     glutTimerFunc(speed,update,0);
+  //   else
+   //  glutTimerFunc(15,myDisplay,0);
+     glutReshapeFunc(resize);
+ /*    if(length==25+max)
+     {
+       printf("PLAYER 1 WINS/n");
+       getch();
+       exit(0);
+     }
+     else if(length2==25+max1)
+     {
+           printf("PLAYER 2 WINS/n");
+        getch();
+           return;
+    }*/
+     glutMainLoop();
+}
